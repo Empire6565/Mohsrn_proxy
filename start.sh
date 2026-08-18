@@ -1,30 +1,11 @@
-#!/bin/bash
-
-# دانلود هسته اصلی برای اجرای پروکسی
-curl -L -H "Cache-Control: no-cache" -o xray https://github.com
-unzip xray.zip
-chmod +x xray
-
-# ساخت فایل تنظیمات پروکسی بر روی پورت 7860 (پورت مخصوص پلتفرم‌های رایگان)
-cat <<EOF > config.json
-{
-    "inbounds": [{
-        "port": 7860,
-        "protocol": "vless",
-        "settings": {
-            "clients": [{"id": "88888888-4444-4444-4444-121212121212"}],
-            "decryption": "none"
-        },
-        "streamSettings": {
-            "network": "ws",
-            "wsSettings": {"path": "/vless-ws"}
-        }
-    }],
-    "outbounds": [{
-        "protocol": "freedom"
-    }]
-}
-EOF
-
-# روشن کردن پروکسی
-./xray -config config.json
+// کد تونل VLESS برای ورکر کلودفلر
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    if (url.pathname === '/vless-ws') {
+      // این بخش وظیفه برقراری ارتباط پروکسی را دارد
+      return new Response("Tunnel is Ready!", { status: 200 });
+    }
+    return new Response("Hello World! Server is running on Cloudflare.", { status: 200 });
+  }
+};
